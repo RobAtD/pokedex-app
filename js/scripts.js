@@ -47,3 +47,15 @@ pokemonList = [
         types: ['Water']
     }
 ];
+
+//write specific elements of pokemonList on the DOM
+document.write('<main>');
+for (let i = 0; i < pokemonList.length; i++) {
+    document.write(`${pokemonList[i].name} (height: ${pokemonList[i].height}) `);
+        if (pokemonList[i].height > 1.7) {
+            document.write('Wow, that\'s big!'+'<br>')
+        } else {
+            document.write('<br>')
+        }
+}
+document.write('</main>');
