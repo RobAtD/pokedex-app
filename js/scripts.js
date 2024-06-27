@@ -49,9 +49,6 @@ let pokemonRepository = (function () {
         },
     ];
 
-    //write specific elements of pokemonList on the DOM
-    document.write('<main>');
-
     // Get all Pokemons
     function getAll() {
         return pokemonList;
@@ -84,20 +81,35 @@ let pokemonRepository = (function () {
         return i;
     }
 
+    // Adds all registered Pokemon
+    function addListItem(pokemon) {
+        let list = document.querySelector('ul');
+        let listItem = document.createElement('li');
+        let button = document.createElement('button');
+        button.innerText = pokemon.name;
+        button.classList.add('pokemonEntry');
+        listItem.appendChild(button);
+        list.appendChild(listItem);
+        showDetails(button, pokemon);
+    }
+
+    // Show Pokemon on button click
+    function showDetails(button, pokemon) {
+        button.addEventListener('click', function (event) {
+            console.log(pokemon.name);
+        });
+    }
+
     return {
         getAll: getAll,
         add: add,
+        addListItem: addListItem,
     };
 })();
 
 // Print all Pokemons + height
 function printPokemonList(pokemon) {
-    document.write(pokemon.name + ' (height: ' + pokemon.height + ') ');
-    if (pokemon.height > 1.7) {
-        document.write("Wow, that's big!" + '<br>');
-    } else {
-        document.write('<br>');
-    }
+    pokemonRepository.addListItem(pokemon);
 }
 
 // Log Pokemons to console
@@ -109,7 +121,9 @@ function logPokemonList(pokemon) {
 function filterByName(pokemonName) {
     return pokemonRepository
         .getAll()
-        .filter((name) => name.name.includes(pokemonName));
+        .filter((name) =>
+            name.name.toLowerCase().includes(pokemonName.toLowerCase())
+        );
 }
 
 // Log pokemonRepository
@@ -122,6 +136,4 @@ pokemonRepository.add({ name: 'Pikachu', height: 0.4, types: ['Electric'] });
 pokemonRepository.getAll().forEach(printPokemonList);
 
 // Log filtered Pokemons
-filterByName('u').forEach(logPokemonList);
-
-document.write('</main>');
+filterByName('ch').forEach(logPokemonList);
