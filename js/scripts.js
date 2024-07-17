@@ -1,53 +1,7 @@
 // Create Object with a list of Pokemons
 let pokemonRepository = (function () {
     let pokemonList = [];
-    pokemonList = [
-        {
-            name: 'Bulbasaur',
-            height: 0.7,
-            type: ['Grass', 'Poison'],
-        },
-        {
-            name: 'Ivysaur',
-            height: 1,
-            type: ['Grass', 'Poison'],
-        },
-        {
-            name: 'Venusaur',
-            height: 2,
-            type: ['Grass', 'Poison'],
-        },
-        {
-            name: 'Charmander',
-            height: 0.6,
-            types: ['Fire'],
-        },
-        {
-            name: 'Charmeleon',
-            height: 1.1,
-            type: ['Fire'],
-        },
-        {
-            name: 'Charizard',
-            height: 1.7,
-            type: ['Fire', 'Flying'],
-        },
-        {
-            name: 'Squirtle',
-            height: 0.5,
-            types: ['Water'],
-        },
-        {
-            name: 'Wartortle',
-            height: 1,
-            types: ['Water'],
-        },
-        {
-            name: 'Blastoise',
-            height: 1.6,
-            types: ['Water'],
-        },
-    ];
+    let apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=1302';
 
     // Get all Pokemons
     function getAll() {
@@ -56,29 +10,11 @@ let pokemonRepository = (function () {
 
     // Add a Pokemon to the list
     function add(pokemon) {
-        let keys = checkKeys(pokemon);
-        let lenght = Object.keys(pokemon).length; // Check lenght of the object
-        // Check if argument is an object
         if (typeof pokemon !== 'object') {
             console.log('Pokemon is not an Object!');
-        } else if (keys === lenght) {
-            pokemonList.push(pokemon);
         } else {
-            console.log('Wrong Keys');
+            pokemonList.push(pokemon);
         }
-    }
-
-    // check if the object has the right keys
-    function checkKeys(pokemon) {
-        let i = 0;
-        Object.keys(pokemon).forEach(function (key) {
-            if (key == 'name' || key == 'height' || key == 'types') {
-                i++;
-            } else {
-                i--;
-            }
-        });
-        return i;
     }
 
     // Adds all registered Pokemon
@@ -96,25 +32,83 @@ let pokemonRepository = (function () {
     // Show Pokemon on button click
     function showDetails(button, pokemon) {
         button.addEventListener('click', function (event) {
-            console.log(pokemon.name);
+            loadDetails(pokemon).then(function () {
+                console.log(pokemon);
+            });
         });
+    }
+
+    function loadList() {
+        showLoadingMessage();
+        return fetch(apiUrl)
+            .then(function (response) {
+                hideLoadingMessage();
+                return response.json();
+            })
+            .then(function (json) {
+                json.results.forEach(function (item) {
+                    let pokemon = {
+                        name: item.name,
+                        detailsUrl: item.url,
+                    };
+                    add(pokemon);
+                });
+            })
+            .catch(function (e) {
+                hideLoadingMessage();
+                console.error(e);
+            });
+    }
+
+    function loadDetails(pokemon) {
+        showLoadingMessage();
+        let url = pokemon.detailsUrl;
+        return fetch(url)
+            .then(function (response) {
+                hideLoadingMessage();
+                return response.json();
+            })
+            .then(function (details) {
+                pokemon.imageURL = details.sprites.front_default;
+                pokemon.height = details.height;
+                pokemon.types = details.types;
+            })
+            .catch(function (e) {
+                hideLoadingMessage();
+                console.error(e);
+            });
+    }
+
+    function showLoadingMessage() {
+        let main = document.querySelector('main');
+        let loadingText = document.createElement('h2');
+        loadingText.id = 'loading-text';
+        loadingText.innerText = 'Loading...';
+        main.prepend(loadingText);
+    }
+
+    function hideLoadingMessage() {
+        let getLoadingText = document.getElementById('loading-text');
+        getLoadingText.remove();
     }
 
     return {
         getAll: getAll,
         add: add,
         addListItem: addListItem,
+        loadList: loadList,
+        loadDetails: loadDetails,
     };
 })();
 
-// Print all Pokemons + height
+// Print all Pokemons
 function printPokemonList(pokemon) {
     pokemonRepository.addListItem(pokemon);
 }
 
 // Log Pokemons to console
 function logPokemonList(pokemon) {
-    console.log(pokemon.name + ' (height: ' + pokemon.height + ') ');
+    console.log(pokemon.name);
 }
 
 // Filter Pokemons by name
@@ -129,11 +123,9 @@ function filterByName(pokemonName) {
 // Log pokemonRepository
 console.log(pokemonRepository.getAll());
 
-// Add a new Pokemon
-pokemonRepository.add({ name: 'Pikachu', height: 0.4, types: ['Electric'] });
-
 // Print all Pokemons
-pokemonRepository.getAll().forEach(printPokemonList);
-
-// Log filtered Pokemons
-filterByName('ch').forEach(logPokemonList);
+pokemonRepository.loadList().then(function () {
+    pokemonRepository.getAll().forEach(printPokemonList);
+    // Filter Pokemon names
+    //filterByName('m').forEach(logPokemonList);
+});
