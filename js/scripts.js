@@ -2,6 +2,9 @@
 let pokemonRepository = (function () {
     let pokemonList = [];
     let apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=1302';
+    let pokemonDetailsContainer = document.querySelector(
+        '#pokemonDetails-container'
+    );
 
     // Get all Pokemons
     function getAll() {
@@ -22,22 +25,92 @@ let pokemonRepository = (function () {
         let list = document.querySelector('ul');
         let listItem = document.createElement('li');
         let button = document.createElement('button');
-        button.innerText = pokemon.name;
+        button.innerText =
+            pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
         button.classList.add('pokemonEntry');
         listItem.appendChild(button);
         list.appendChild(listItem);
         showDetails(button, pokemon);
     }
 
-    // Show Pokemon on button click
+    // Show Pokemon details on button click
     function showDetails(button, pokemon) {
         button.addEventListener('click', function (event) {
             loadDetails(pokemon).then(function () {
-                console.log(pokemon);
+                pokemonDetailsContainer.innerHTML = '';
+
+                // Create the elements for the details
+                let pokemonDetails = document.createElement('div');
+                let pokemonDetailsItems = document.createElement('div');
+                let buttonClose = document.createElement('button');
+                let img = document.createElement('img');
+                let name = document.createElement('p');
+                let height = document.createElement('p');
+                let types = document.createElement('p');
+
+                // Add the right classes to the elements
+                pokemonDetails.classList.add('pokemonDetails');
+                pokemonDetailsItems.classList.add('pokemonDetails-items');
+                buttonClose.classList.add('pokemonDetails-close');
+                img.classList.add('pokemon-img');
+
+                // Add the content to the elements
+                buttonClose.innerText = 'X';
+                img.src = pokemon.imageURL;
+                name.innerText =
+                    'Name: ' +
+                    pokemon.name.charAt(0).toUpperCase() +
+                    pokemon.name.slice(1);
+                height.innerText = 'Height: ' + pokemon.height;
+                types.innerText = 'Types: ' + pokemon.types.map(getTypes);
+
+                // Add elements to the DOM
+                pokemonDetailsContainer.appendChild(pokemonDetails);
+                pokemonDetails.appendChild(buttonClose);
+                pokemonDetails.appendChild(img);
+                pokemonDetails.appendChild(pokemonDetailsItems);
+                pokemonDetailsItems.appendChild(name);
+                pokemonDetailsItems.appendChild(height);
+                pokemonDetailsItems.appendChild(types);
+
+                // Add is-visible class to details container
+                pokemonDetailsContainer.classList.add('is-visible');
+
+                // Hide details when clicked inside the container
+                pokemonDetailsContainer.addEventListener('click', (e) => {
+                    let target = e.target;
+                    if (target === pokemonDetailsContainer) {
+                        hideDetails();
+                    }
+                });
+
+                // Hide details on button click
+                buttonClose.addEventListener('click', hideDetails);
+
+                // Get types function
+                function getTypes(item) {
+                    return [item.type.name].join(', ');
+                }
             });
         });
     }
 
+    // Hide details function
+    function hideDetails() {
+        pokemonDetailsContainer.classList.remove('is-visible');
+    }
+
+    // Hide details when Escape button has been pressed
+    window.addEventListener('keydown', (e) => {
+        if (
+            e.key === 'Escape' &&
+            pokemonDetailsContainer.classList.contains('is-visible')
+        ) {
+            hideDetails();
+        }
+    });
+
+    // Load pokemon from API
     function loadList() {
         showLoadingMessage();
         return fetch(apiUrl)
@@ -60,6 +133,7 @@ let pokemonRepository = (function () {
             });
     }
 
+    // Load pokemon details from API
     function loadDetails(pokemon) {
         showLoadingMessage();
         let url = pokemon.detailsUrl;
@@ -79,6 +153,7 @@ let pokemonRepository = (function () {
             });
     }
 
+    // Show a loading message
     function showLoadingMessage() {
         let main = document.querySelector('main');
         let loadingText = document.createElement('h2');
@@ -87,6 +162,7 @@ let pokemonRepository = (function () {
         main.prepend(loadingText);
     }
 
+    // Hide the loading message
     function hideLoadingMessage() {
         let getLoadingText = document.getElementById('loading-text');
         getLoadingText.remove();
@@ -121,7 +197,7 @@ function filterByName(pokemonName) {
 }
 
 // Log pokemonRepository
-console.log(pokemonRepository.getAll());
+//console.log(pokemonRepository.getAll());
 
 // Print all Pokemons
 pokemonRepository.loadList().then(function () {
