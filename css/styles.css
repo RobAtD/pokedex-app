@@ -87,7 +87,7 @@ h2 {
     position: relative;
     display: flex;
     flex-direction: row-reverse;
-    justify-content:space-between;
+    justify-content: space-between;
     align-items: center;
     padding: 30px 30px;
     width: 594px;
