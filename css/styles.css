@@ -81,6 +81,7 @@ h2 {
     padding: 50px;
     z-index: 999;
     overflow: auto;
+    touch-action: none;
 }
 
 .pokemonDetails {
