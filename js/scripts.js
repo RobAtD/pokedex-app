@@ -84,6 +84,55 @@ let pokemonRepository = (function () {
                     }
                 });
 
+                // Pointer events
+                let xDown;
+                let xUp;
+                pokemonDetails.addEventListener('pointerdown', handleDown);
+
+                // Pointer down function
+                function handleDown(e) {
+                    xDown = e.pageX;
+
+                    console.log(xDown);
+                    let index = pokemonList.indexOf(pokemon);
+                    index++;
+
+                    console.log(index + " Test");
+
+                    pokemonDetails.addEventListener('pointerup', handleUp);
+                }
+
+                // Pointer up function
+                function handleUp(e) {
+                    xUp = e.pageX;
+                    console.log(xUp);
+                    console.log('Difference: ' + (xDown - xUp));
+
+                    if (xUp <= xDown - 100) {
+                        console.log('Next Pokemon');
+                        pokemonList.forEach(function (index) {
+                            if (index.name === pokemon.name) {
+                                let i = pokemonList.indexOf(index);
+                                console.log(pokemon);
+
+                                loadDetails(pokemonList[i+1]).then(function (){
+                                    console.log(pokemonList[i+1]);
+                                    name.innerText =
+                                    'Name: ' +
+                                    pokemon.name.charAt(0).toUpperCase() +
+                                    pokemon.name.slice(1);
+                                });
+
+                                console.log(pokemonList.indexOf(index));
+                            }
+                        });
+                    }
+
+                    if (xUp >= xDown + 100) {
+                        console.log('Previous Pokemon');
+                    }
+                }
+
                 // Hide details on button click
                 buttonClose.addEventListener('click', hideDetails);
 
