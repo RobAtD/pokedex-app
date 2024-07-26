@@ -19,6 +19,31 @@ body {
     background-color: var(--background-color-body);
 }
 
+#loadingMessage-container {
+    display: none;
+}
+
+#loadingMessage-container.is-visible {
+    display: flex;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    padding: 50px;
+    z-index: 999;
+    overflow: auto;
+}
+
+.loadingMessage {
+    position: relative;
+    text-align: center;
+    padding: 30px 30px;
+    width: 594px;
+    height: auto;
+    margin: auto;
+    background-color: var(--button-color-primary);
+}
+
 main {
     margin: auto;
     padding: 20px;
@@ -79,9 +104,8 @@ h2 {
     height: 100%;
     margin: auto;
     padding: 50px;
-    z-index: 999;
+    z-index: 998;
     overflow: auto;
-    touch-action: none;
 }
 
 .pokemonDetails {
