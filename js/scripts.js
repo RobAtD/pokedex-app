@@ -218,6 +218,22 @@ let pokemonRepository = (function () {
         loadingMessageContainer.classList.remove('is-visible');
     }
 
+    //Adding background music
+    let musicButton = document.querySelector('.music-button');
+    let backgroundMusic = document.querySelector('audio');
+
+    musicButton.addEventListener('click', function () {
+        if(musicButton.classList.contains('pause')){
+            backgroundMusic.load();
+            backgroundMusic.volume = 0.1;
+            backgroundMusic.play();
+            musicButton.classList.remove('pause');
+        } else {
+            backgroundMusic.pause();
+            musicButton.classList.add('pause');
+        }
+    });
+
     return {
         getAll: getAll,
         add: add,
