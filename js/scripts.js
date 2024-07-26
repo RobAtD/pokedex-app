@@ -115,6 +115,7 @@ let pokemonRepository = (function () {
                     }
                 }
 
+                // Function for updating data on swipe
                 function updateDetails() {
                     if (index < 0) {
                         index++;
