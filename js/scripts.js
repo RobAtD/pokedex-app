@@ -5,6 +5,9 @@ let pokemonRepository = (function () {
     let pokemonDetailsContainer = document.querySelector(
         '#pokemonDetails-container'
     );
+    let loadingMessageContainer = document.querySelector(
+        '#loadingMessage-container'
+    );
 
     // Get all Pokemons
     function getAll() {
@@ -84,52 +87,54 @@ let pokemonRepository = (function () {
                     }
                 });
 
-                // Pointer events
+                //Touch events
                 let xDown;
                 let xUp;
-                pokemonDetails.addEventListener('pointerdown', handleDown);
+                let index = pokemonList.indexOf(pokemon);
+                pokemonDetails.addEventListener('touchstart', handleStart);
 
-                // Pointer down function
-                function handleDown(e) {
-                    xDown = e.pageX;
+                // Touchstart function
+                function handleStart(e) {
+                    xDown = e.changedTouches[0].screenX;
 
-                    console.log(xDown);
-                    let index = pokemonList.indexOf(pokemon);
-                    index++;
-
-                    console.log(index + " Test");
-
-                    pokemonDetails.addEventListener('pointerup', handleUp);
+                    pokemonDetails.addEventListener('touchend', handleEnd);
                 }
 
-                // Pointer up function
-                function handleUp(e) {
-                    xUp = e.pageX;
-                    console.log(xUp);
-                    console.log('Difference: ' + (xDown - xUp));
+                // Touch end function
+                function handleEnd(e) {
+                    xUp = e.changedTouches[0].screenX;
 
                     if (xUp <= xDown - 100) {
-                        console.log('Next Pokemon');
-                        pokemonList.forEach(function (index) {
-                            if (index.name === pokemon.name) {
-                                let i = pokemonList.indexOf(index);
-                                console.log(pokemon);
-
-                                loadDetails(pokemonList[i+1]).then(function (){
-                                    console.log(pokemonList[i+1]);
-                                    name.innerText =
-                                    'Name: ' +
-                                    pokemon.name.charAt(0).toUpperCase() +
-                                    pokemon.name.slice(1);
-                                });
-
-                                console.log(pokemonList.indexOf(index));
-                            }
-                        });
+                        index++;
+                        updateDetails();
                     }
 
                     if (xUp >= xDown + 100) {
-                        console.log('Previous Pokemon');
+                        index--;
+                        updateDetails();
+                    }
+                }
+
+                function updateDetails() {
+                    if (index < 0) {
+                        index++;
+                    } else if(pokemonList[index]) {
+                        loadDetails(pokemonList[index]).then(function () {
+                            name.innerText =
+                                'Name: ' +
+                                pokemonList[index].name
+                                    .charAt(0)
+                                    .toUpperCase() +
+                                pokemonList[index].name.slice(1);
+                            height.innerText =
+                                'Height: ' + pokemonList[index].height;
+                            types.innerText =
+                                'Types: ' +
+                                pokemonList[index].types.map(getTypes);
+                            img.src = pokemonList[index].imageURL;
+                        });
+                    } else {
+                        index--;
                     }
                 }
 
@@ -204,17 +209,12 @@ let pokemonRepository = (function () {
 
     // Show a loading message
     function showLoadingMessage() {
-        let main = document.querySelector('main');
-        let loadingText = document.createElement('h2');
-        loadingText.id = 'loading-text';
-        loadingText.innerText = 'Loading...';
-        main.prepend(loadingText);
+        loadingMessageContainer.classList.add('is-visible');
     }
 
     // Hide the loading message
     function hideLoadingMessage() {
-        let getLoadingText = document.getElementById('loading-text');
-        getLoadingText.remove();
+        loadingMessageContainer.classList.remove('is-visible');
     }
 
     return {
