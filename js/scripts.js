@@ -2,12 +2,11 @@
 let pokemonRepository = (function () {
     let pokemonList = [];
     let apiUrl = 'https://pokeapi.co/api/v2/pokemon/?limit=1302';
-    let pokemonDetailsContainer = document.querySelector(
-        '#pokemonDetails-container'
+    let loadingSpinnerContainer = document.querySelector(
+        '#loadingSpinner-container'
     );
-    let loadingMessageContainer = document.querySelector(
-        '#loadingMessage-container'
-    );
+    let previousButton = $('#previous-pokemon');
+    let nextButton = $('#next-pokemon');
 
     // Get all Pokemons
     function getAll() {
@@ -23,14 +22,17 @@ let pokemonRepository = (function () {
         }
     }
 
-    // Adds all registered Pokemon
+    // Add all registered Pokemon
     function addListItem(pokemon) {
         let list = document.querySelector('ul');
         let listItem = document.createElement('li');
         let button = document.createElement('button');
+        button.setAttribute('data-toggle', 'modal');
+        button.setAttribute('data-target', '#pokemonDetails-container');
         button.innerText =
             pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
-        button.classList.add('pokemonEntry');
+        button.classList.add('btn', 'btn-primary', 'btn-lg', 'btn-block');
+        listItem.classList.add('list-group-item');
         listItem.appendChild(button);
         list.appendChild(listItem);
         showDetails(button, pokemon);
@@ -40,130 +42,128 @@ let pokemonRepository = (function () {
     function showDetails(button, pokemon) {
         button.addEventListener('click', function (event) {
             loadDetails(pokemon).then(function () {
-                pokemonDetailsContainer.innerHTML = '';
+                let detailsTitle = $('.modal-title');
+                let detailsBody = $('.modal-body');
+                let detailsContent = document.querySelector('.modal-body');
+
+                // Empty the title and content of the modal
+                detailsTitle.empty();
+                detailsBody.empty();
 
                 // Create the elements for the details
-                let pokemonDetails = document.createElement('div');
-                let pokemonDetailsItems = document.createElement('div');
-                let buttonClose = document.createElement('button');
-                let img = document.createElement('img');
-                let name = document.createElement('p');
-                let height = document.createElement('p');
-                let types = document.createElement('p');
+                let imgFront = $('<img class="modal-img" style="width:50%" />');
+                imgFront.attr('src', pokemon.imageURLFront);
+                imgFront.attr('aria-label', 'Front image of ' + pokemon.name.charAt(0).toUpperCase() +
+                pokemon.name.slice(1));
 
-                // Add the right classes to the elements
-                pokemonDetails.classList.add('pokemonDetails');
-                pokemonDetailsItems.classList.add('pokemonDetails-items');
-                buttonClose.classList.add('pokemonDetails-close');
-                img.classList.add('pokemon-img');
+                let imgBack = $('<img class="modal-img" style="width:50%" />');
+                imgBack.attr('src', pokemon.imageURLBack);
+                imgBack.attr('aria-label', 'Back image of ' + pokemon.name.charAt(0).toUpperCase() +
+                pokemon.name.slice(1));
 
-                // Add the content to the elements
-                buttonClose.innerText = 'X';
-                img.src = pokemon.imageURL;
-                name.innerText =
-                    'Name: ' +
-                    pokemon.name.charAt(0).toUpperCase() +
-                    pokemon.name.slice(1);
-                height.innerText = 'Height: ' + pokemon.height;
-                types.innerText = 'Types: ' + pokemon.types.map(getTypes);
+                let name = $(
+                    '<p>Name: ' +
+                        pokemon.name.charAt(0).toUpperCase() +
+                        pokemon.name.slice(1) +
+                        '</p>'
+                );
+
+                let height = $('<p>Height: ' + pokemon.height + '</p>');
+                let types = $(
+                    '<p>Types: ' + pokemon.types.map(getTypes) + '</p>'
+                );
 
                 // Add elements to the DOM
-                pokemonDetailsContainer.appendChild(pokemonDetails);
-                pokemonDetails.appendChild(buttonClose);
-                pokemonDetails.appendChild(img);
-                pokemonDetails.appendChild(pokemonDetailsItems);
-                pokemonDetailsItems.appendChild(name);
-                pokemonDetailsItems.appendChild(height);
-                pokemonDetailsItems.appendChild(types);
+                detailsTitle.append(name);
+                detailsBody.append(imgFront);
+                detailsBody.append(imgBack);
+                detailsBody.append(height);
+                detailsBody.append(types);
 
-                // Add is-visible class to details container
-                pokemonDetailsContainer.classList.add('is-visible');
-
-                // Hide details when clicked inside the container
-                pokemonDetailsContainer.addEventListener('click', (e) => {
-                    let target = e.target;
-                    if (target === pokemonDetailsContainer) {
-                        hideDetails();
-                    }
-                });
-
-                //Touch events
+                //Touch event variables
                 let xDown;
                 let xUp;
                 let index = pokemonList.indexOf(pokemon);
-                pokemonDetails.addEventListener('touchstart', handleStart);
 
-                // Touchstart function
+                detailsContent.addEventListener('touchstart', handleStart);
+
+                // Touch start
                 function handleStart(e) {
                     xDown = e.changedTouches[0].screenX;
 
-                    pokemonDetails.addEventListener('touchend', handleEnd);
+                    detailsContent.addEventListener('touchend', handleEnd);
                 }
 
-                // Touch end function
+                // Touch end 
                 function handleEnd(e) {
                     xUp = e.changedTouches[0].screenX;
 
-                    if (xUp <= xDown - 100) {
+                    if (xUp <= xDown) {
                         index++;
                         updateDetails();
                     }
 
-                    if (xUp >= xDown + 100) {
+                    if (xUp >= xDown) {
                         index--;
                         updateDetails();
                     }
                 }
 
-                // Function for updating data on swipe
+                // Updating data on swipe
                 function updateDetails() {
                     if (index < 0) {
                         index++;
-                    } else if(pokemonList[index]) {
+                    } else if (pokemonList[index]) {
                         loadDetails(pokemonList[index]).then(function () {
-                            name.innerText =
+                            name.text(
                                 'Name: ' +
-                                pokemonList[index].name
-                                    .charAt(0)
-                                    .toUpperCase() +
-                                pokemonList[index].name.slice(1);
-                            height.innerText =
-                                'Height: ' + pokemonList[index].height;
-                            types.innerText =
-                                'Types: ' +
-                                pokemonList[index].types.map(getTypes);
-                            img.src = pokemonList[index].imageURL;
+                                    pokemonList[index].name
+                                        .charAt(0)
+                                        .toUpperCase() +
+                                    pokemonList[index].name.slice(1)
+                            );
+                            height.text('Height: ' + pokemonList[index].height);
+                            types.html(
+                                '<p> Types: ' +
+                                    pokemonList[index].types.map(getTypes) +
+                                    '</p>'
+                            );
+                            imgFront.attr(
+                                'src',
+                                pokemonList[index].imageURLFront
+                            );
+                            imgFront.attr('aria-label', 'Front image of ' + pokemonList[index].name.charAt(0).toUpperCase() +
+                            pokemonList[index].name.slice(1));
+                            imgBack.attr(
+                                'src',
+                                pokemonList[index].imageURLBack
+                            );
+                            imgBack.attr('aria-label', 'Back image of ' + pokemonList[index].name.charAt(0).toUpperCase() +
+                            pokemonList[index].name.slice(1));
                         });
                     } else {
                         index--;
                     }
                 }
 
-                // Hide details on button click
-                buttonClose.addEventListener('click', hideDetails);
+                //Switch Pokemons on button click
+                previousButton.on('click', function () {
+                    index--;
+                    updateDetails();
+                });
 
-                // Get types function
-                function getTypes(item) {
-                    return [item.type.name].join(', ');
-                }
+                nextButton.on('click', function () {
+                    index++;
+                    updateDetails();
+                });
             });
         });
     }
 
-    // Hide details function
-    function hideDetails() {
-        pokemonDetailsContainer.classList.remove('is-visible');
+    // Get types
+    function getTypes(item) {
+        return [item.type.name].join(', ');
     }
-
-    // Hide details when Escape button has been pressed
-    window.addEventListener('keydown', (e) => {
-        if (
-            e.key === 'Escape' &&
-            pokemonDetailsContainer.classList.contains('is-visible')
-        ) {
-            hideDetails();
-        }
-    });
 
     // Load pokemon from API
     function loadList() {
@@ -198,7 +198,8 @@ let pokemonRepository = (function () {
                 return response.json();
             })
             .then(function (details) {
-                pokemon.imageURL = details.sprites.front_default;
+                pokemon.imageURLFront = details.sprites.front_default;
+                pokemon.imageURLBack = details.sprites.back_default;
                 pokemon.height = details.height;
                 pokemon.types = details.types;
             })
@@ -208,14 +209,14 @@ let pokemonRepository = (function () {
             });
     }
 
-    // Show a loading message
+    // Show a loading spinner
     function showLoadingMessage() {
-        loadingMessageContainer.classList.add('is-visible');
+        loadingSpinnerContainer.classList.add('is-visible');
     }
 
-    // Hide the loading message
+    // Hide the loading spinner
     function hideLoadingMessage() {
-        loadingMessageContainer.classList.remove('is-visible');
+        loadingSpinnerContainer.classList.remove('is-visible');
     }
 
     //Adding background music
@@ -223,7 +224,7 @@ let pokemonRepository = (function () {
     let backgroundMusic = document.querySelector('audio');
 
     musicButton.addEventListener('click', function () {
-        if(musicButton.classList.contains('pause')){
+        if (musicButton.classList.contains('pause')) {
             backgroundMusic.load();
             backgroundMusic.volume = 0.1;
             backgroundMusic.play();
@@ -262,12 +263,7 @@ function filterByName(pokemonName) {
         );
 }
 
-// Log pokemonRepository
-//console.log(pokemonRepository.getAll());
-
 // Print all Pokemons
 pokemonRepository.loadList().then(function () {
     pokemonRepository.getAll().forEach(printPokemonList);
-    // Filter Pokemon names
-    //filterByName('m').forEach(logPokemonList);
 });
