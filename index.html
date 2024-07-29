@@ -11,11 +11,12 @@
             href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap"
             rel="stylesheet"
         />
-        <!-- Normalize browser stylings -->
+        <!-- Loading Bootstrap -->
         <link
             rel="stylesheet"
-            type="text/css"
-            href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+            crossorigin="anonymous"
         />
         <link rel="stylesheet" type="text/css" href="./css/styles.css" />
         <title>Pokedex App</title>
@@ -23,23 +24,58 @@
     <body>
         <!-- Adding background music-->
         <audio loop>
-            <source src="./audio/background-music.mp3" type="audio/mpeg">
+            <source src="./audio/background-music.mp3" type="audio/mpeg" />
         </audio>
-        <div id="pokemonDetails-container"></div>
-        <div id="loadingMessage-container">
-            <div class="loadingMessage"><h2>Loading...</h2></div>
+        <!-- Loading spinner-->
+        <div id="loadingSpinner-container">
+            <div class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+            </div>
         </div>
-        <header>
-            <img src="./img/logo.jpg" alt="POKÉDEX Logo" class="logo-img" />
+        <nav class="navbar sticky-top" aria-label="Header bar">
+            <img src="./img/logo.jpg" alt="POKÉDEX Logo" class="logo-img"/>
             <h1>POKÉDEX APP</h1>
             <!-- Button for background music toggle-->
             <button class="music-button pause">Music</button>
-        </header>
-        <main>
-            <ul class="pokemon-list"></ul>
+        </nav>
+        <div id="pokemonDetails-container" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="pokemonDetails-container" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content" id="pokemonDetails">
+                    <div class="modal-header">
+                        <h2 class="modal-title">Pokemon Name</h2>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" aria-label="Pokemon details">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="previous-pokemon" class="btn btn-secondary previous-pokemon" aria-label="Previous Pokemon">Previous</button>
+                        <button type="button" id="next-pokemon" class="btn btn-secondary next-pokemon" aria-label="Next Pokemon">Next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <main aria-label="Main content">
+            <ul class="list-group-flush" aria-label="Pokemon list"></ul>
         </main>
         <script src="js/promise-polyfill.js"></script>
         <script src="js/fetch-polyfill.js"></script>
-        <script src="js/scripts.js"></script>
+        <script
+            src="https://code.jquery.com/jquery-3.3.1.min.js"
+            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"
+        ></script>
+        <script src="./js/scripts.js"></script>
     </body>
 </html>
