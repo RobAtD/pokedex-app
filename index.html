@@ -29,29 +29,54 @@
         <!-- Loading spinner-->
         <div id="loadingSpinner-container">
             <div class="spinner-border" role="status">
-            <span class="sr-only">Loading...</span>
+                <span class="sr-only">Loading...</span>
             </div>
         </div>
         <nav class="navbar sticky-top" aria-label="Header bar">
-            <img src="./img/logo.jpg" alt="POKÉDEX Logo" class="logo-img"/>
+            <img src="./img/logo.jpg" alt="POKÉDEX Logo" class="logo-img" />
             <h1>POKÉDEX APP</h1>
             <!-- Button for background music toggle-->
             <button class="music-button pause">Music</button>
         </nav>
-        <div id="pokemonDetails-container" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="pokemonDetails-container" aria-hidden="true">
+        <div
+            id="pokemonDetails-container"
+            class="modal fade"
+            tabindex="-1"
+            role="dialog"
+            aria-labelledby="pokemonDetails-container"
+            aria-hidden="true"
+        >
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content" id="pokemonDetails">
                     <div class="modal-header">
                         <h2 class="modal-title">Pokemon Name</h2>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                        >
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body" aria-label="Pokemon details">
-                    </div>
+                    <div class="modal-body" aria-label="Pokemon details"></div>
                     <div class="modal-footer">
-                        <button type="button" id="previous-pokemon" class="btn btn-secondary previous-pokemon" aria-label="Previous Pokemon">Previous</button>
-                        <button type="button" id="next-pokemon" class="btn btn-secondary next-pokemon" aria-label="Next Pokemon">Next</button>
+                        <button
+                            type="button"
+                            id="previous-pokemon"
+                            class="btn btn-secondary previous-pokemon"
+                            aria-label="Previous Pokemon"
+                        >
+                            Previous
+                        </button>
+                        <button
+                            type="button"
+                            id="next-pokemon"
+                            class="btn btn-secondary next-pokemon"
+                            aria-label="Next Pokemon"
+                        >
+                            Next
+                        </button>
                     </div>
                 </div>
             </div>

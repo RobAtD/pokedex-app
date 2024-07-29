@@ -53,13 +53,21 @@ let pokemonRepository = (function () {
                 // Create the elements for the details
                 let imgFront = $('<img class="modal-img" style="width:50%" />');
                 imgFront.attr('src', pokemon.imageURLFront);
-                imgFront.attr('aria-label', 'Front image of ' + pokemon.name.charAt(0).toUpperCase() +
-                pokemon.name.slice(1));
+                imgFront.attr(
+                    'aria-label',
+                    'Front image of ' +
+                        pokemon.name.charAt(0).toUpperCase() +
+                        pokemon.name.slice(1)
+                );
 
                 let imgBack = $('<img class="modal-img" style="width:50%" />');
                 imgBack.attr('src', pokemon.imageURLBack);
-                imgBack.attr('aria-label', 'Back image of ' + pokemon.name.charAt(0).toUpperCase() +
-                pokemon.name.slice(1));
+                imgBack.attr(
+                    'aria-label',
+                    'Back image of ' +
+                        pokemon.name.charAt(0).toUpperCase() +
+                        pokemon.name.slice(1)
+                );
 
                 let name = $(
                     '<p>Name: ' +
@@ -94,7 +102,7 @@ let pokemonRepository = (function () {
                     detailsContent.addEventListener('touchend', handleEnd);
                 }
 
-                // Touch end 
+                // Touch end
                 function handleEnd(e) {
                     xUp = e.changedTouches[0].screenX;
 
@@ -132,14 +140,26 @@ let pokemonRepository = (function () {
                                 'src',
                                 pokemonList[index].imageURLFront
                             );
-                            imgFront.attr('aria-label', 'Front image of ' + pokemonList[index].name.charAt(0).toUpperCase() +
-                            pokemonList[index].name.slice(1));
+                            imgFront.attr(
+                                'aria-label',
+                                'Front image of ' +
+                                    pokemonList[index].name
+                                        .charAt(0)
+                                        .toUpperCase() +
+                                    pokemonList[index].name.slice(1)
+                            );
                             imgBack.attr(
                                 'src',
                                 pokemonList[index].imageURLBack
                             );
-                            imgBack.attr('aria-label', 'Back image of ' + pokemonList[index].name.charAt(0).toUpperCase() +
-                            pokemonList[index].name.slice(1));
+                            imgBack.attr(
+                                'aria-label',
+                                'Back image of ' +
+                                    pokemonList[index].name
+                                        .charAt(0)
+                                        .toUpperCase() +
+                                    pokemonList[index].name.slice(1)
+                            );
                         });
                     } else {
                         index--;
