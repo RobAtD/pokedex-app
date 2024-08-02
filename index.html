@@ -22,20 +22,31 @@
         <title>Pokedex App</title>
     </head>
     <body>
-        <!-- Adding background music-->
+        <!-- Adding background music -->
         <audio loop>
             <source src="./audio/background-music.mp3" type="audio/mpeg" />
         </audio>
-        <!-- Loading spinner-->
+        <!-- Loading spinner -->
         <div id="loadingSpinner-container">
             <div class="spinner-border" role="status">
                 <span class="sr-only">Loading...</span>
             </div>
         </div>
-        <nav class="navbar sticky-top" aria-label="Header bar">
-            <img src="./img/logo.jpg" alt="POKÉDEX Logo" class="logo-img" />
-            <h1>POKÉDEX APP</h1>
-            <!-- Button for background music toggle-->
+        <nav class="navbar sticky-top pt-3" aria-label="Header bar">
+            <div class="d-flex my-3">
+                <img src="./img/logo.jpg" alt="POKÉDEX Logo" class="logo-img" />
+                <h1>POKÉDEX APP</h1>
+            </div>
+            <form class="d-flex mx-3">
+                <input
+                    type="search"
+                    id="search-field"
+                    class="form-control"
+                    placeholder="Search Pokémon"
+                    aria-label="Search"
+                />
+            </form>
+            <!-- Button for background music toggle -->
             <button class="music-button pause">Music</button>
         </nav>
         <div
@@ -46,6 +57,7 @@
             aria-labelledby="pokemonDetails-container"
             aria-hidden="true"
         >
+            <!-- Modal for Pokemon details -->
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content" id="pokemonDetails">
                     <div class="modal-header">
@@ -81,9 +93,11 @@
                 </div>
             </div>
         </div>
+        <!-- Main content -->
         <main aria-label="Main content">
             <ul class="list-group-flush" aria-label="Pokemon list"></ul>
         </main>
+        <!-- Scripts -->
         <script src="js/promise-polyfill.js"></script>
         <script src="js/fetch-polyfill.js"></script>
         <script
