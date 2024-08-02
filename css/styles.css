@@ -73,9 +73,14 @@ h2 {
     line-height: 1.8;
 }
 
+ul {
+    padding: 0;
+}
+
 .logo-img {
     max-width: 100px;
-    margin: 0 30px;
+    margin-right: 10px;
+    object-fit: contain;
 }
 
 .btn-primary {
@@ -92,12 +97,18 @@ h2 {
     z-index: 10000;
 }
 
-@media all and (max-width: 750px) {
+@media all and (max-width: 770px) {
     h1 {
-        font-size: 40px;
+        font-size: 35px;
     }
 
     h2 {
-        font-size: 20px;
+        font-size: 30px;
+    }
+}
+
+@media all and (max-width: 671px) {
+    .d-flex.mx-3 {
+        width: 600px;
     }
 }
