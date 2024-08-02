@@ -27,11 +27,13 @@ let pokemonRepository = (function () {
         let list = document.querySelector('ul');
         let listItem = document.createElement('li');
         let button = document.createElement('button');
+
         button.setAttribute('data-toggle', 'modal');
         button.setAttribute('data-target', '#pokemonDetails-container');
         button.innerText =
             pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
         button.classList.add('btn', 'btn-primary', 'btn-lg', 'btn-block');
+
         listItem.classList.add('list-group-item');
         listItem.appendChild(button);
         list.appendChild(listItem);
@@ -40,7 +42,7 @@ let pokemonRepository = (function () {
 
     // Show Pokemon details on button click
     function showDetails(button, pokemon) {
-        button.addEventListener('click', function (event) {
+        button.addEventListener('click', function () {
             loadDetails(pokemon).then(function () {
                 let detailsTitle = $('.modal-title');
                 let detailsBody = $('.modal-body');
@@ -269,11 +271,6 @@ function printPokemonList(pokemon) {
     pokemonRepository.addListItem(pokemon);
 }
 
-// Log Pokemons to console
-function logPokemonList(pokemon) {
-    console.log(pokemon.name);
-}
-
 // Filter Pokemons by name
 function filterByName(pokemonName) {
     return pokemonRepository
@@ -285,5 +282,13 @@ function filterByName(pokemonName) {
 
 // Print all Pokemons
 pokemonRepository.loadList().then(function () {
+    let searchField = $('#search-field');
+    let filteredList = document.querySelector('ul');
     pokemonRepository.getAll().forEach(printPokemonList);
+
+    // Filter Pokemons
+    searchField.on('input', function () {
+        filteredList.innerHTML = '';
+        filterByName(searchField.val()).forEach(printPokemonList);
+    });
 });
