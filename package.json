@@ -1,0 +1,16 @@
+{
+  "name": "pokedex-app",
+  "version": "1.0.0",
+  "description": "An App that shows a list of Pokémons",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Robert Ditler",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/js": "^9.8.0",
+    "eslint": "^9.8.0",
+    "globals": "^15.9.0"
+  }
+}
