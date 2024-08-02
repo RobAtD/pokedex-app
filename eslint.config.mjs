@@ -2,7 +2,7 @@ import globals from 'globals';
 import pluginJs from '@eslint/js';
 
 export default [
-    { ignores: ['**/promise-polyfill.js'] },
+    { ignores: ['**/*-polyfill.js', 'stylelint.config.js', '**/dist/*'] },
     { files: ['**/*.js'], languageOptions: { sourceType: 'script' } },
     {
         languageOptions: {
