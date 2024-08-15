@@ -80,7 +80,9 @@ let pokemonRepository = (function () {
 
                 let height = $('<p>Height: ' + pokemon.height + '</p>');
                 let types = $(
-                    '<p>Types: ' + pokemon.types.map(getTypes) + '</p>'
+                    '<p>Types: ' +
+                        pokemon.types.map((type) => type.type.name).join(', ') +
+                        '</p>'
                 );
 
                 // Add elements to the DOM
@@ -135,7 +137,9 @@ let pokemonRepository = (function () {
                             height.text('Height: ' + pokemonList[index].height);
                             types.html(
                                 '<p> Types: ' +
-                                    pokemonList[index].types.map(getTypes) +
+                                    pokemonList[index].types
+                                        .map((type) => type.type.name)
+                                        .join(', ') +
                                     '</p>'
                             );
                             imgFront.attr(
@@ -180,11 +184,6 @@ let pokemonRepository = (function () {
                 });
             });
         });
-    }
-
-    // Get types
-    function getTypes(item) {
-        return [item.type.name].join(', ');
     }
 
     // Load pokemon from API
@@ -258,11 +257,11 @@ let pokemonRepository = (function () {
     });
 
     return {
-        getAll: getAll,
-        add: add,
-        addListItem: addListItem,
-        loadList: loadList,
-        loadDetails: loadDetails,
+        getAll,
+        add,
+        addListItem,
+        loadList,
+        loadDetails,
     };
 })();
 
